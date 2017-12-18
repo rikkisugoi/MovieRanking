@@ -1,22 +1,17 @@
-package com.example.ricardo.movieranking.activity;
+package com.example.ricardo.movieranking.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.view.View;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.example.ricardo.movieranking.R;
-import com.example.ricardo.movieranking.model.Configuration;
-import com.example.ricardo.movieranking.model.DetailsMovie;
-import com.example.ricardo.movieranking.model.MovieRanking;
-import com.example.ricardo.movieranking.service.MovieDBService;
-import com.example.ricardo.movieranking.service.ServiceFactory;
-
-import org.w3c.dom.Text;
+import com.example.ricardo.movieranking.models.Configuration;
+import com.example.ricardo.movieranking.models.DetailsMovie;
+import com.example.ricardo.movieranking.services.MovieDBService;
+import com.example.ricardo.movieranking.services.ServiceFactory;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -49,6 +44,12 @@ public class DetailsActivity extends AppCompatActivity{
 
         final MovieDBService movieDBService = ServiceFactory.createRetrofitService(MovieDBService.class, MovieDBService.SERVICE_ENDPOINT);
 
+        callGetConfiguration(movieDBService);
+
+        getDetalhesFilme(movieDBService, movieId);
+    }
+
+    private void callGetConfiguration(MovieDBService movieDBService) {
         final Observable<Configuration> configuration =
                 movieDBService.getConfiguration(MovieDBService.SERVICE_API_KEY);
 
@@ -71,19 +72,13 @@ public class DetailsActivity extends AppCompatActivity{
                         setConfiguration(configuration);
                     }
                 });
-
-
-
-        getDetalhesFilme(movieId);
     }
 
     private void setConfiguration(Configuration configuration) {
         this.configuration = configuration;
     }
 
-    private void getDetalhesFilme(int movieId) {
-        final MovieDBService movieDBService = ServiceFactory.createRetrofitService(MovieDBService.class, MovieDBService.SERVICE_ENDPOINT);
-
+    private void getDetalhesFilme(MovieDBService movieDBService, int movieId) {
         final Observable<DetailsMovie> movieDetails =
                 movieDBService.getMovieDetails(movieId, MovieDBService.SERVICE_API_KEY, "pt-BR");
 
@@ -103,39 +98,47 @@ public class DetailsActivity extends AppCompatActivity{
 
                     @Override
                     public void onNext(DetailsMovie response) {
-                        detailsTitle = (TextView) findViewById(R.id.details_title);
-                        detailsOriginalTitle = (TextView) findViewById(R.id.details_original_title);
-                        detailsScore = (TextView) findViewById(R.id.details_score);
-                        detailsGenre = (TextView) findViewById(R.id.details_genre);
-                        detailsRelease = (TextView) findViewById(R.id.details_release);
-                        detailsStudios = (TextView) findViewById(R.id.details_studios);
-                        detailsSinopsis = (TextView) findViewById(R.id.details_sinopsis);
+                        setLayoutFields(response);
+                    }
+                });
+    }
+
+    private void setLayoutFields(DetailsMovie response) {
+        detailsTitle = (TextView) findViewById(R.id.details_title);
+        detailsOriginalTitle = (TextView) findViewById(R.id.details_original_title);
+        detailsScore = (TextView) findViewById(R.id.details_score);
+        detailsGenre = (TextView) findViewById(R.id.details_genre);
+        detailsRelease = (TextView) findViewById(R.id.details_release);
+        detailsStudios = (TextView) findViewById(R.id.details_studios);
+        detailsSinopsis = (TextView) findViewById(R.id.details_sinopsis);
 
 
-                        detailsTitle.setText(response.getTitle());
-                        detailsOriginalTitle.setText("Título original: " + response.getOriginalTitle());
-                        detailsScore.setText("Nota: " + String.valueOf(response.getVoteAverage()));
+        detailsTitle.setText(response.getTitle());
+        detailsOriginalTitle.setText("Título original: " + response.getOriginalTitle());
+        detailsScore.setText("Nota: " + String.valueOf(response.getVoteAverage()));
 
-                        String genreText = "Gêneros: ";
-                        for (int i = 0; i < response.getGenres().size(); i ++) {
-                            if(genreText != "Gêneros: "){
-                              genreText += ", ";
-                            }
-                            genreText += response.getGenres().get(i).getName();
-                        };
+        String genreText = "Gêneros: ";
+        for (int i = 0; i < response.getGenres().size(); i ++) {
+            if(genreText != "Gêneros: "){
+              genreText += ", ";
+            }
+            genreText += response.getGenres().get(i).getName();
+        }
+        ;
 
-                        detailsGenre.setText(genreText);
-                        detailsRelease.setText("Ano de lançamento: " + response.getReleaseDate().substring(0,4));
+        detailsGenre.setText(genreText);
+        detailsRelease.setText("Ano de lançamento: " + response.getReleaseDate().substring(0,4));
 
-                        String studiosText = "Produzido por: ";
-                        for (int i = 0; i < response.getProductionCompanies().size(); i ++) {
-                            if(studiosText != "Produzido por: "){
-                                studiosText += ", ";
-                            }
-                            studiosText += response.getProductionCompanies().get(i).getName();
-                        };
-                        detailsStudios.setText(studiosText);
-                        detailsSinopsis.setText("Sinopse: " + response.getOverview());
+        String studiosText = "Produzido por: ";
+        for (int i = 0; i < response.getProductionCompanies().size(); i ++) {
+            if(studiosText != "Produzido por: "){
+                studiosText += ", ";
+            }
+            studiosText += response.getProductionCompanies().get(i).getName();
+        }
+        ;
+        detailsStudios.setText(studiosText);
+        detailsSinopsis.setText("Sinopse: " + response.getOverview());
 
 //                        String imageLoader = configuration.getImages().getBaseUrl()
 //                                + configuration.getImages().getPosterSizes().get(2)
@@ -145,7 +148,5 @@ public class DetailsActivity extends AppCompatActivity{
 //                                .load(imageLoader)
 //                                .animate(android.R.anim.fade_in)
 //                                .into(R.layout.detalhes_filme);
-                    }
-                });
     }
 }

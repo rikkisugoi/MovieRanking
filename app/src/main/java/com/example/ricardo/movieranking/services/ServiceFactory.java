@@ -1,4 +1,4 @@
-package com.example.ricardo.movieranking.service;
+package com.example.ricardo.movieranking.services;
 
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;

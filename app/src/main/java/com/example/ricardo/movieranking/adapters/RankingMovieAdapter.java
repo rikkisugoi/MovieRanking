@@ -1,7 +1,6 @@
-package com.example.ricardo.movieranking.adapter;
+package com.example.ricardo.movieranking.adapters;
 
 import android.content.Context;
-import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -13,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.example.ricardo.movieranking.interfaces.OnBottomReachedListener;
 import com.example.ricardo.movieranking.R;
-import com.example.ricardo.movieranking.activity.DetailsActivity;
-import com.example.ricardo.movieranking.model.Configuration;
-import com.example.ricardo.movieranking.model.DetailsMovieRanking;
+import com.example.ricardo.movieranking.models.Configuration;
+import com.example.ricardo.movieranking.models.DetailsMovieRanking;
 
 import java.util.ArrayList;
 
@@ -29,8 +28,7 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
     private final ArrayList<DetailsMovieRanking> listMovieRanking;
     private final Context context;
     private Configuration configuration;
-    public View link;
-    private int movieId;
+    OnBottomReachedListener onBottomReachedListener;
 
     public RankingMovieAdapter(Context context) {
         super();
@@ -44,6 +42,10 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
 
     public int getMovieIdFromClicked(int position){
         return listMovieRanking.get(position).getId();
+    }
+
+    public void setOnBottomReachedListener(OnBottomReachedListener onBottomReachedListener){
+        this.onBottomReachedListener = onBottomReachedListener;
     }
 
     @Override
@@ -80,6 +82,11 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
         final SpannableString spannableString = new SpannableString( text );
         spannableString.setSpan(new URLSpan(""), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.moreInfo.setText(spannableString, TextView.BufferType.SPANNABLE);
+
+
+        if (position == listMovieRanking.size() - 1){
+            onBottomReachedListener.onBottomReached(position);
+        }
     }
 
     @Override

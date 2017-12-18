@@ -1,8 +1,8 @@
-package com.example.ricardo.movieranking.service;
+package com.example.ricardo.movieranking.services;
 
-import com.example.ricardo.movieranking.model.Configuration;
-import com.example.ricardo.movieranking.model.DetailsMovie;
-import com.example.ricardo.movieranking.model.MovieRanking;
+import com.example.ricardo.movieranking.models.Configuration;
+import com.example.ricardo.movieranking.models.DetailsMovie;
+import com.example.ricardo.movieranking.models.MovieRanking;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;

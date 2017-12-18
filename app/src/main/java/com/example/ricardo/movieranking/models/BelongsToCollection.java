@@ -1,4 +1,4 @@
-package com.example.ricardo.movieranking.model;
+package com.example.ricardo.movieranking.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

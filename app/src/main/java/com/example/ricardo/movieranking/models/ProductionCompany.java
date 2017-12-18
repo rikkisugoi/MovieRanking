@@ -1,4 +1,4 @@
-package com.example.ricardo.movieranking.model;
+package com.example.ricardo.movieranking.models;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -7,21 +7,13 @@ import com.google.gson.annotations.SerializedName;
  * Created by Ricardo on 18/12/2017.
  */
 
-public class ProductionCountry {
-    @SerializedName("iso_3166_1")
-    @Expose
-    private String iso31661;
+public class ProductionCompany {
     @SerializedName("name")
     @Expose
     private String name;
-
-    public String getIso31661() {
-        return iso31661;
-    }
-
-    public void setIso31661(String iso31661) {
-        this.iso31661 = iso31661;
-    }
+    @SerializedName("id")
+    @Expose
+    private Integer id;
 
     public String getName() {
         return name;
@@ -29,5 +21,13 @@ public class ProductionCountry {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 }

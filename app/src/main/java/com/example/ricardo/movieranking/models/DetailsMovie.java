@@ -1,10 +1,5 @@
-package com.example.ricardo.movieranking.model;
+package com.example.ricardo.movieranking.models;
 
-import com.example.ricardo.movieranking.model.BelongsToCollection;
-import com.example.ricardo.movieranking.model.Genre;
-import com.example.ricardo.movieranking.model.ProductionCompany;
-import com.example.ricardo.movieranking.model.ProductionCountry;
-import com.example.ricardo.movieranking.model.SpokenLanguage;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
