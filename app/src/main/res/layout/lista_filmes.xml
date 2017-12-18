@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/movie_poster"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="400px"
+                android:layout_height="500px"
                 />
 
             <LinearLayout
