@@ -1,4 +1,4 @@
-package com.example.ricardo.movieranking;
+package com.example.ricardo.movieranking.model;
 
 /**
  * Created by Ricardo on 12/12/2017.

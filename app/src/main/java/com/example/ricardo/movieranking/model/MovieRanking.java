@@ -1,10 +1,11 @@
-package com.example.ricardo.movieranking;
+package com.example.ricardo.movieranking.model;
 
 /**
  * Created by Ricardo on 12/12/2017.
  */
 
 import java.util.List;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
