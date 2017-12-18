@@ -42,6 +42,10 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
         this.configuration = configuration;
     }
 
+    public int getMovieIdFromClicked(int position){
+        return listMovieRanking.get(position).getId();
+    }
+
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())

@@ -53,21 +53,18 @@ public class MainActivity extends AppCompatActivity {
         final Observable<Configuration> configuration =
                 movieDBService.getConfiguration(MovieDBService.SERVICE_API_KEY);
 
-        final Observable<MovieRanking> popularRanking =
-                movieDBService.getTopRatedMovies(MovieDBService.SERVICE_API_KEY, "pt-BR", 1);
-
         configuration.
                 subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Configuration>() {
                     @Override
                     public void onCompleted() {
-
+                        Log.e("getConfiguration end", "COMPLETED");
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        Log.e("configuration err", e.getMessage());
+                        Log.e("getConfiguration err", e.getMessage());
                     }
 
                     @Override
@@ -76,18 +73,22 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
+
+        final Observable<MovieRanking> popularRanking =
+                movieDBService.getTopRatedMovies(MovieDBService.SERVICE_API_KEY, "pt-BR", 1);
+
         popularRanking.
                 subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<MovieRanking>() {
                                @Override
                                public void onCompleted() {
-                                   Log.e("RICARDO MovieRanking", "COMPLETED");
+                                   Log.e("getTopRatedMovies end", "COMPLETED");
                                }
 
                                @Override
                                public void onError(Throwable e) {
-                                   Log.e("MovieRanking err", e.getMessage());
+                                   Log.e("getTopRatedMovies err", e.getMessage());
                                }
 
                                @Override
@@ -95,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
                                    for(int i =0; i < response.getResults().size(); i++){
                                        rankingMovieAdapter.addData(response.getResults().get(i));
                                        Log.e("MovieRanking response", response.getResults().get(i).getTitle());
-                                       final Integer movieId = response.getResults().get(i).getId();
 
                                        recyclerView.addOnItemTouchListener(new RecyclerTouchListener(getApplicationContext(),
                                                recyclerView, new ClickListener() {
@@ -106,6 +106,7 @@ public class MainActivity extends AppCompatActivity {
                                                moreInfo.setOnClickListener(new View.OnClickListener() {
                                                    @Override
                                                    public void onClick(View v) {
+                                                       int movieId = rankingMovieAdapter.getMovieIdFromClicked(position);
                                                        Intent intent = new Intent(getApplicationContext(), DetailsActivity.class);
                                                        intent.putExtra("movieId", movieId);
                                                        startActivity(intent);
