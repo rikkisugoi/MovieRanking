@@ -15,7 +15,7 @@ import com.bumptech.glide.Glide;
 import com.example.ricardo.movieranking.interfaces.OnBottomReachedListener;
 import com.example.ricardo.movieranking.R;
 import com.example.ricardo.movieranking.models.Configuration;
-import com.example.ricardo.movieranking.models.MovieRankingResults;
+import com.example.ricardo.movieranking.models.MovieListResults;
 import com.example.ricardo.movieranking.models.Genre;
 
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.List;
 
 public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapter.ViewHolder>{
 
-    private final ArrayList<MovieRankingResults> listMovieRanking;
+    private final ArrayList<MovieListResults> listMovieRanking;
     private final Context context;
     private Configuration configuration;
     OnBottomReachedListener onBottomReachedListener;
@@ -65,39 +65,47 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        MovieRankingResults movieRankingResults = listMovieRanking.get(position);
+        MovieListResults movieListResults = listMovieRanking.get(position);
 
-        String imageLoader = configuration.getImages().getBaseUrl()
-                + configuration.getImages().getPosterSizes().get(2)
-                + movieRankingResults.getPosterPath();
+        if(configuration != null) {
+            String imageLoader = configuration.getImages().getBaseUrl()
+                    + configuration.getImages().getPosterSizes().get(2)
+                    + movieListResults.getPosterPath();
 
-        Glide.with(context)
-                .load(imageLoader)
-                .placeholder(R.drawable.clickbus_logo)
-                .error(R.drawable.image_not_found)
-                .centerCrop()
-                .override(400, 500)
-                .animate(android.R.anim.fade_in)
-                .into(holder.poster);
+            Glide.with(context)
+                    .load(imageLoader)
+                    .placeholder(R.drawable.clickbus_logo)
+                    .error(R.drawable.image_not_found)
+                    .centerCrop()
+                    .override(400, 500)
+                    .animate(android.R.anim.fade_in)
+                    .into(holder.poster);
+        }
 
-        holder.title.setText(movieRankingResults.getTitle());
-        holder.score.setText("Nota: " + String.valueOf(movieRankingResults.getVoteAverage()));
+        holder.title.setText(movieListResults.getTitle());
+        holder.score.setText("Nota: " + String.valueOf(movieListResults.getVoteAverage()));
 
-        String genreText = "Gêneros: ";
-        for(int i = 0; i < movieRankingResults.getGenreIds().size(); i++){
-            int genre = movieRankingResults.getGenreIds().get(i);
-            if(genreText != "Gêneros: "){
-                genreText += ", ";
-            }
-            for(int j = 0; i < this.genresList.size(); j++){
-                if(genre == this.genresList.get(j).getId()){
-                    genreText += this.genresList.get(j).getName();
-                    break;
+        if(genresList != null) {
+            String genreText = "Gêneros: ";
+            for (int i = 0; i < movieListResults.getGenreIds().size(); i++) {
+                int genre = movieListResults.getGenreIds().get(i);
+                if (genreText != "Gêneros: ") {
+                    genreText += ", ";
+                }
+                for (int j = 0; i < this.genresList.size(); j++) {
+                    if (genre == this.genresList.get(j).getId()) {
+                        genreText += this.genresList.get(j).getName();
+                        break;
+                    }
                 }
             }
+            holder.genre.setText(genreText);
         }
-        holder.genre.setText(genreText);
-        holder.releaseYear.setText("Ano de lançamento: " + movieRankingResults.getReleaseDate().substring(0,4));
+
+        if( movieListResults.getReleaseDate() != null
+                &&  movieListResults.getReleaseDate().length() > 0){
+            holder.releaseYear.setText("Ano de lançamento: " + movieListResults.getReleaseDate().substring(0,4));
+        }
 
         final CharSequence text = "Clique aqui para saber mais";
         final SpannableString spannableString = new SpannableString( text );
@@ -115,8 +123,13 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
         return listMovieRanking.size();
     }
 
-    public void addData(MovieRankingResults response) {
+    public void addData(MovieListResults response) {
         listMovieRanking.add(response);
+        notifyDataSetChanged();
+    }
+
+    public void clear() {
+        listMovieRanking.clear();
         notifyDataSetChanged();
     }
 

@@ -146,26 +146,28 @@ public class DetailsActivity extends AppCompatActivity{
 
         detailsSinopsis.setText("Sinopse: " + response.getOverview());
 
-        String imageLoader = configuration.getImages().getBaseUrl()
-                + configuration.getImages().getBackdropSizes().get(3)
-                + response.getBackdropPath();
+        if(configuration != null) {
+            String imageLoader = configuration.getImages().getBaseUrl()
+                    + configuration.getImages().getBackdropSizes().get(3)
+                    + response.getBackdropPath();
 
-        Glide.with(this)
-                .load(imageLoader)
-                .asBitmap()
-                .into(new SimpleTarget<Bitmap>() {
-                    @Override
-                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
-                        Drawable drawable = new BitmapDrawable(getResources(), resource);
+            Glide.with(this)
+                    .load(imageLoader)
+                    .asBitmap()
+                    .into(new SimpleTarget<Bitmap>() {
+                        @Override
+                        public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                            Drawable drawable = new BitmapDrawable(getResources(), resource);
 
-                        int sdk = android.os.Build.VERSION.SDK_INT;
-                        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
-                            layoutDetails.setBackgroundDrawable(drawable);
-                        } else {
-                            layoutDetails.setBackground(drawable);
+                            int sdk = android.os.Build.VERSION.SDK_INT;
+                            if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                                layoutDetails.setBackgroundDrawable(drawable);
+                            } else {
+                                layoutDetails.setBackground(drawable);
+                            }
                         }
-                    }
-                });
+                    });
+        }
     }
 
 }

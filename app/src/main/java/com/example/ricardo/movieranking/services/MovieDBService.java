@@ -3,7 +3,7 @@ package com.example.ricardo.movieranking.services;
 import com.example.ricardo.movieranking.models.Configuration;
 import com.example.ricardo.movieranking.models.MovieDetails;
 import com.example.ricardo.movieranking.models.AllGenres;
-import com.example.ricardo.movieranking.models.MovieRanking;
+import com.example.ricardo.movieranking.models.MovieList;
 
 import retrofit2.http.GET;
 import retrofit2.http.Path;
@@ -28,13 +28,18 @@ public interface MovieDBService {
                                     @Query("language") String language);
 
     @GET("movie/top_rated?")
-    Observable<MovieRanking>  getTopRatedMovies(@Query("api_key") String apiKey,
-                                                @Query("language") String language,
-                                                @Query("page") int page);
+    Observable<MovieList>  getTopRatedMovies(@Query("api_key") String apiKey,
+                                             @Query("language") String language,
+                                             @Query("page") int page);
 
     @GET("movie/{movie_id}?")
     Observable<MovieDetails>  getMovieDetails(@Path("movie_id") int movieId,
                                               @Query("api_key") String apiKey,
                                               @Query("language") String language);
 
+    @GET("/3/search/movie?")
+    Observable<MovieList> getSearchMovie(@Query("api_key") String apiKey,
+                                         @Query("language") String language,
+                                         @Query("query") String query,
+                                         @Query("page") int page);
 }

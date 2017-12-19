@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">MovieRanking</string>
+    <string name="search_title">Busque por um filme:</string>
 </resources>

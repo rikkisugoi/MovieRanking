@@ -15,7 +15,7 @@
                     android:id="@+id/details_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="25sp"
+                    android:textSize="22sp"
                     android:textColor="@color/red"
                     android:background="@color/cardview_dark_background"/>
 
@@ -23,7 +23,7 @@
                     android:id="@+id/details_original_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="25sp"
+                    android:textSize="22sp"
                     android:textColor="@color/red"
                     android:layout_marginBottom="25dp"
                     android:background="@color/cardview_dark_background"/>
@@ -32,7 +32,7 @@
                     android:id="@+id/details_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/white"
                     android:background="@color/cardview_dark_background"/>
@@ -41,7 +41,7 @@
                     android:id="@+id/details_genre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/white"
                     android:background="@color/cardview_dark_background"/>
@@ -50,7 +50,7 @@
                     android:id="@+id/details_release"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/white"
                     android:background="@color/cardview_dark_background"/>
@@ -59,7 +59,7 @@
                     android:id="@+id/details_studios"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/white"
                     android:background="@color/cardview_dark_background"/>
@@ -68,7 +68,7 @@
                     android:id="@+id/details_sinopsis"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"
+                    android:textSize="16sp"
                     android:layout_marginBottom="14dp"
                     android:textColor="@color/white"
                     android:background="@color/cardview_dark_background"/>
