@@ -22,7 +22,7 @@ public class MovieRanking {
     private Integer totalPages;
     @SerializedName("results")
     @Expose
-    private List<DetailsMovieRanking> results = null;
+    private List<MovieRankingResults> results = null;
 
     public Integer getPage() {
         return page;
@@ -36,7 +36,7 @@ public class MovieRanking {
         return totalPages;
     }
 
-    public List<DetailsMovieRanking> getResults() {
+    public List<MovieRankingResults> getResults() {
         return results;
     }
 

@@ -15,9 +15,11 @@ import com.bumptech.glide.Glide;
 import com.example.ricardo.movieranking.interfaces.OnBottomReachedListener;
 import com.example.ricardo.movieranking.R;
 import com.example.ricardo.movieranking.models.Configuration;
-import com.example.ricardo.movieranking.models.DetailsMovieRanking;
+import com.example.ricardo.movieranking.models.MovieRankingResults;
+import com.example.ricardo.movieranking.models.Genre;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Ricardo on 15/12/2017.
@@ -25,19 +27,24 @@ import java.util.ArrayList;
 
 public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapter.ViewHolder>{
 
-    private final ArrayList<DetailsMovieRanking> listMovieRanking;
+    private final ArrayList<MovieRankingResults> listMovieRanking;
     private final Context context;
     private Configuration configuration;
     OnBottomReachedListener onBottomReachedListener;
+    private List<Genre> genresList;
 
     public RankingMovieAdapter(Context context) {
         super();
         this.context = context;
-        listMovieRanking = new ArrayList<DetailsMovieRanking>();
+        listMovieRanking = new ArrayList<>();
     }
 
     public void setConfiguration(Configuration configuration){
         this.configuration = configuration;
+    }
+
+    public void setGenreList(List<Genre> genres) {
+        this.genresList = genres;
     }
 
     public int getMovieIdFromClicked(int position){
@@ -58,11 +65,11 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        DetailsMovieRanking detailsMovieRanking = listMovieRanking.get(position);
+        MovieRankingResults movieRankingResults = listMovieRanking.get(position);
 
         String imageLoader = configuration.getImages().getBaseUrl()
                 + configuration.getImages().getPosterSizes().get(2)
-                + detailsMovieRanking.getPosterPath();
+                + movieRankingResults.getPosterPath();
 
         Glide.with(context)
                 .load(imageLoader)
@@ -73,10 +80,24 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
                 .animate(android.R.anim.fade_in)
                 .into(holder.poster);
 
-        holder.title.setText(detailsMovieRanking.getTitle());
-        holder.score.setText("Nota: " + String.valueOf(detailsMovieRanking.getVoteAverage()));
-//        holder.genre.getText(detailsMovieRanking.)
-        holder.releaseYear.setText("Ano de lançamento: " + detailsMovieRanking.getReleaseDate().substring(0,4));
+        holder.title.setText(movieRankingResults.getTitle());
+        holder.score.setText("Nota: " + String.valueOf(movieRankingResults.getVoteAverage()));
+
+        String genreText = "Gêneros: ";
+        for(int i = 0; i < movieRankingResults.getGenreIds().size(); i++){
+            int genre = movieRankingResults.getGenreIds().get(i);
+            if(genreText != "Gêneros: "){
+                genreText += ", ";
+            }
+            for(int j = 0; i < this.genresList.size(); j++){
+                if(genre == this.genresList.get(j).getId()){
+                    genreText += this.genresList.get(j).getName();
+                    break;
+                }
+            }
+        }
+        holder.genre.setText(genreText);
+        holder.releaseYear.setText("Ano de lançamento: " + movieRankingResults.getReleaseDate().substring(0,4));
 
         final CharSequence text = "Clique aqui para saber mais";
         final SpannableString spannableString = new SpannableString( text );
@@ -94,7 +115,7 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
         return listMovieRanking.size();
     }
 
-    public void addData(DetailsMovieRanking response) {
+    public void addData(MovieRankingResults response) {
         listMovieRanking.add(response);
         notifyDataSetChanged();
     }

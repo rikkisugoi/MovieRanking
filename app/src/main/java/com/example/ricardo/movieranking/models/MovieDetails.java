@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Ricardo on 18/12/2017.
  */
 
-public class DetailsMovie {
+public class MovieDetails {
     @SerializedName("adult")
     @Expose
     private Boolean adult;

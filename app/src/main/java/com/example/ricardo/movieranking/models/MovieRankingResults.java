@@ -9,7 +9,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class
-DetailsMovieRanking {
+MovieRankingResults {
 
     @SerializedName("vote_count")
     @Expose

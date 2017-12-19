@@ -1,15 +1,22 @@
 package com.example.ricardo.movieranking.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.animation.GlideAnimation;
+import com.bumptech.glide.request.target.SimpleTarget;
 import com.example.ricardo.movieranking.R;
 import com.example.ricardo.movieranking.models.Configuration;
-import com.example.ricardo.movieranking.models.DetailsMovie;
+import com.example.ricardo.movieranking.models.MovieDetails;
 import com.example.ricardo.movieranking.services.MovieDBService;
 import com.example.ricardo.movieranking.services.ServiceFactory;
 
@@ -31,8 +38,8 @@ public class DetailsActivity extends AppCompatActivity{
     private TextView detailsOriginalTitle;
     private TextView detailsGenre;
     private TextView detailsStudios;
-    private MovieDBService movieDBService;
     private Configuration configuration;
+    private View layoutDetails;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -79,13 +86,13 @@ public class DetailsActivity extends AppCompatActivity{
     }
 
     private void getDetalhesFilme(MovieDBService movieDBService, int movieId) {
-        final Observable<DetailsMovie> movieDetails =
-                movieDBService.getMovieDetails(movieId, MovieDBService.SERVICE_API_KEY, "pt-BR");
+        final Observable<MovieDetails> movieDetails =
+                movieDBService.getMovieDetails(movieId, MovieDBService.SERVICE_API_KEY, MovieDBService.SERVICE_LANGUAGE);
 
         movieDetails.
                 subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new Subscriber<DetailsMovie>() {
+                .subscribe(new Subscriber<MovieDetails>() {
                     @Override
                     public void onCompleted() {
                         Log.e("getMovieDetails end ", "COMPLETED");
@@ -97,13 +104,13 @@ public class DetailsActivity extends AppCompatActivity{
                     }
 
                     @Override
-                    public void onNext(DetailsMovie response) {
+                    public void onNext(MovieDetails response) {
                         setLayoutFields(response);
                     }
                 });
     }
 
-    private void setLayoutFields(DetailsMovie response) {
+    private void setLayoutFields(MovieDetails response) {
         detailsTitle = (TextView) findViewById(R.id.details_title);
         detailsOriginalTitle = (TextView) findViewById(R.id.details_original_title);
         detailsScore = (TextView) findViewById(R.id.details_score);
@@ -111,7 +118,7 @@ public class DetailsActivity extends AppCompatActivity{
         detailsRelease = (TextView) findViewById(R.id.details_release);
         detailsStudios = (TextView) findViewById(R.id.details_studios);
         detailsSinopsis = (TextView) findViewById(R.id.details_sinopsis);
-
+        layoutDetails = findViewById(R.id.layout_details);
 
         detailsTitle.setText(response.getTitle());
         detailsOriginalTitle.setText("Título original: " + response.getOriginalTitle());
@@ -124,9 +131,8 @@ public class DetailsActivity extends AppCompatActivity{
             }
             genreText += response.getGenres().get(i).getName();
         }
-        ;
-
         detailsGenre.setText(genreText);
+
         detailsRelease.setText("Ano de lançamento: " + response.getReleaseDate().substring(0,4));
 
         String studiosText = "Produzido por: ";
@@ -136,17 +142,30 @@ public class DetailsActivity extends AppCompatActivity{
             }
             studiosText += response.getProductionCompanies().get(i).getName();
         }
-        ;
         detailsStudios.setText(studiosText);
+
         detailsSinopsis.setText("Sinopse: " + response.getOverview());
 
-//                        String imageLoader = configuration.getImages().getBaseUrl()
-//                                + configuration.getImages().getPosterSizes().get(2)
-//                                + response.getBackdropPath();
-//
-//                        Glide.with(getApplicationContext())
-//                                .load(imageLoader)
-//                                .animate(android.R.anim.fade_in)
-//                                .into(R.layout.detalhes_filme);
+        String imageLoader = configuration.getImages().getBaseUrl()
+                + configuration.getImages().getBackdropSizes().get(3)
+                + response.getBackdropPath();
+
+        Glide.with(this)
+                .load(imageLoader)
+                .asBitmap()
+                .into(new SimpleTarget<Bitmap>() {
+                    @Override
+                    public void onResourceReady(Bitmap resource, GlideAnimation<? super Bitmap> glideAnimation) {
+                        Drawable drawable = new BitmapDrawable(getResources(), resource);
+
+                        int sdk = android.os.Build.VERSION.SDK_INT;
+                        if(sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                            layoutDetails.setBackgroundDrawable(drawable);
+                        } else {
+                            layoutDetails.setBackground(drawable);
+                        }
+                    }
+                });
     }
+
 }

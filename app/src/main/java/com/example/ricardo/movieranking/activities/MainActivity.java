@@ -9,14 +9,19 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import com.example.ricardo.movieranking.RecyclerTouchListener;
 import com.example.ricardo.movieranking.interfaces.ClickListener;
 import com.example.ricardo.movieranking.interfaces.OnBottomReachedListener;
 import com.example.ricardo.movieranking.R;
 import com.example.ricardo.movieranking.adapters.RankingMovieAdapter;
+import com.example.ricardo.movieranking.models.AllGenres;
 import com.example.ricardo.movieranking.models.Configuration;
+import com.example.ricardo.movieranking.models.Genre;
 import com.example.ricardo.movieranking.models.MovieRanking;
 import com.example.ricardo.movieranking.services.MovieDBService;
 import com.example.ricardo.movieranking.services.ServiceFactory;
+
+import java.util.List;
 
 import rx.Observable;
 import rx.Subscriber;
@@ -43,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
         final MovieDBService movieDBService = ServiceFactory.createRetrofitService(MovieDBService.class, MovieDBService.SERVICE_ENDPOINT);
         callGetConfiguration(rankingMovieAdapter, movieDBService);
+        callGetGenres(rankingMovieAdapter, movieDBService);
         callGetTopRatedMovies(rankingMovieAdapter, movieDBService, page);
 
         rankingMovieAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
@@ -54,6 +60,31 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+    }
+
+    private void callGetGenres(final RankingMovieAdapter rankingMovieAdapter, MovieDBService movieDBService) {
+        final Observable<AllGenres> allGenres =
+                movieDBService.getGenres(MovieDBService.SERVICE_API_KEY, MovieDBService.SERVICE_LANGUAGE);
+
+        allGenres.
+                subscribeOn(Schedulers.newThread())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new Subscriber<AllGenres>() {
+                    @Override
+                    public void onCompleted() {
+                        Log.e("getGenres end", "COMPLETED");
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        Log.e("getGenres err", e.getMessage());
+                    }
+
+                    @Override
+                    public void onNext(AllGenres allGenres) {
+                        rankingMovieAdapter.setGenreList(allGenres.getGenres());
+                    }
+                });
     }
 
     private void callGetConfiguration(final RankingMovieAdapter rankingMovieAdapter, MovieDBService movieDBService) {
@@ -83,7 +114,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void callGetTopRatedMovies(final RankingMovieAdapter rankingMovieAdapter, MovieDBService movieDBService, int page) {
         final Observable<MovieRanking> popularRanking =
-                movieDBService.getTopRatedMovies(MovieDBService.SERVICE_API_KEY, "pt-BR", page);
+                movieDBService.getTopRatedMovies(MovieDBService.SERVICE_API_KEY, MovieDBService.SERVICE_LANGUAGE, page);
 
         popularRanking.
                 subscribeOn(Schedulers.newThread())
@@ -104,7 +135,6 @@ public class MainActivity extends AppCompatActivity {
                                    totalPages = response.getTotalPages();
 
                                    for(int i =0; i < response.getResults().size(); i++){
-
                                        rankingMovieAdapter.addData(response.getResults().get(i));
                                        Log.e("MovieRanking response", response.getResults().get(i).getTitle());
 
