@@ -48,17 +48,30 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        /*
+        Criando a RecyclerView,
+        configurando Layout e Adapter
+         */
         recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         rankingMovieAdapter = new RankingMovieAdapter(getApplicationContext());
         recyclerView.setAdapter(rankingMovieAdapter);
 
+        /*
+        Criando objeto de Retrofit
+        e realizando as chamadas
+         */
         movieDBService = ServiceFactory.createRetrofitService(MovieDBService.class, MovieDBService.SERVICE_ENDPOINT);
         callGetConfiguration(rankingMovieAdapter, movieDBService);
         callGetGenres(rankingMovieAdapter, movieDBService);
         callGetTopRatedMovies(rankingMovieAdapter, movieDBService, page);
 
+        /*
+        Ao atingir o fim da RecyclerView,
+        buscar a próxima página de filmes
+        gerando um scroll contínuo
+         */
         rankingMovieAdapter.setOnBottomReachedListener(new OnBottomReachedListener() {
             @Override
             public void onBottomReached(int position) {
@@ -75,6 +88,9 @@ public class MainActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.options_menu, menu);
 
+        /*
+        Criando o mecanismo de pesquisa
+         */
         SearchManager searchManager =
                 (SearchManager) getSystemService(Context.SEARCH_SERVICE);
         SearchView searchView =
@@ -82,8 +98,12 @@ public class MainActivity extends AppCompatActivity {
         searchView.setSearchableInfo(
                 searchManager.getSearchableInfo(getComponentName()));
 
+        /*
+        Pesquisa utilizando Debounce
+        com intervalo de 1 segundo
+         */
         RxSearch.fromSearchView(searchView)
-                .debounce(1000, TimeUnit.MILLISECONDS)
+                .debounce(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<String>() {
 
@@ -106,6 +126,13 @@ public class MainActivity extends AppCompatActivity {
                             isFirstSearch = false;
                             callGetMovieSearch(query);
                         } else {
+                            /*
+                            ao abrir a busca, não é necessário efetuar
+                            essa chamada pois os elementos já estão
+                            carregados na tela.
+                            Se o campo de busca estiver vazia,
+                            carrego a lista normal de filmes
+                             */
                             if(!isFirstSearch) {
                                 callGetTopRatedMovies(rankingMovieAdapter, movieDBService, page);
                             }
@@ -115,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    /*
+    Pesquisar por filmes na API
+     */
     private void callGetMovieSearch(String query) {
         final Observable<MovieList> movieSearch =
                 movieDBService.getSearchMovie(MovieDBService.SERVICE_API_KEY, MovieDBService.SERVICE_LANGUAGE, query, page);
@@ -163,6 +193,9 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /*
+    Consultar na API a lista de gêneros
+     */
     private void callGetGenres(final RankingMovieAdapter rankingMovieAdapter, MovieDBService movieDBService) {
         final Observable<AllGenres> allGenres =
                 movieDBService.getGenres(MovieDBService.SERVICE_API_KEY, MovieDBService.SERVICE_LANGUAGE);
@@ -188,6 +221,11 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /*
+    Obtendo as configurações.
+    Esse objeto terá a URL base para
+    buscar as imagens
+     */
     private void callGetConfiguration(final RankingMovieAdapter rankingMovieAdapter, MovieDBService movieDBService) {
         final Observable<Configuration> configuration =
                 movieDBService.getConfiguration(MovieDBService.SERVICE_API_KEY);
@@ -213,6 +251,10 @@ public class MainActivity extends AppCompatActivity {
                 });
     }
 
+    /*
+    Buscando lista de filmes
+    ordenadas por maior nota
+     */
     private void callGetTopRatedMovies(final RankingMovieAdapter rankingMovieAdapter, MovieDBService movieDBService, int page) {
         rankingMovieAdapter.clear();
         final Observable<MovieList> popularRanking =
@@ -262,28 +304,4 @@ public class MainActivity extends AppCompatActivity {
                            }
                 );
     }
-
-//    public class SearchResultsActivity extends Activity {
-//
-//        @Override
-//        public void onCreate(Bundle savedInstanceState) {
-//
-//            super.onCreate(savedInstanceState);
-//            handleIntent(getIntent());
-//        }
-//
-//        @Override
-//        protected void onNewIntent(Intent intent) {
-//
-//            handleIntent(intent);
-//        }
-//
-//        private void handleIntent(Intent intent) {
-//
-//            if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
-//                String query = intent.getStringExtra(SearchManager.QUERY);
-//                //use the query to search your data somehow
-//            }
-//        }
-//    }
 }

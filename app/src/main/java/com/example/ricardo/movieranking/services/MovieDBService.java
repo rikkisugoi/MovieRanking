@@ -12,6 +12,9 @@ import rx.Observable;
 
 /**
  * Created by Ricardo on 12/12/2017.
+ *
+ * Classe criada para reunir as
+ * chamadas RESTful da API
  */
 
 public interface MovieDBService {

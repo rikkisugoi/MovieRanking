@@ -8,6 +8,10 @@ import rx.subjects.BehaviorSubject;
 
 /**
  * Created by Ricardo on 19/12/2017.
+ *
+ * Essa classe tem como função escutar o campo
+ * do elemento SearchView, para disparar
+ * as chamadas com Debounce
  */
 
 public class RxSearch {

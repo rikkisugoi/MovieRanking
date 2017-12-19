@@ -6,6 +6,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by Ricardo on 18/12/2017.
+ *
+ * Classe criada para gerar
+ * Builders de Retrofit
+ * que serão utilizados nas
+ * chamadas de serviços REST
  */
 
 public class ServiceFactory {

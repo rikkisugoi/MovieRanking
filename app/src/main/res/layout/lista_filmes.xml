@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="5dp">
+            android:padding="10dp">
 
             <ImageView
                 android:id="@+id/movie_poster"
@@ -34,32 +34,32 @@
                     android:id="@+id/movie_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="20sp"
-                    android:textColor="@color/colorAccent"/>
+                    android:textSize="22sp"
+                    android:textColor="@color/red"/>
 
                 <TextView
                     android:id="@+id/movie_score"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"/>
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/movie_genre"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"/>
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/movie_release"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"/>
+                    android:textSize="16sp"/>
 
                 <TextView
                     android:id="@+id/more_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textSize="15sp"/>
+                    android:textSize="16sp"/>
 
             </LinearLayout>
 

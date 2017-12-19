@@ -10,6 +10,10 @@ import com.example.ricardo.movieranking.interfaces.ClickListener;
 
 /**
  * Created by rosu on 18/12/17.
+ *
+ * Essa classe foi implementada para
+ * habilitar clique em itens dentro
+ * da RecyclerView
  */
 
 public class RecyclerTouchListener  implements RecyclerView.OnItemTouchListener{
@@ -45,7 +49,10 @@ public class RecyclerTouchListener  implements RecyclerView.OnItemTouchListener{
 
     @Override
     public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-
+        View child=rv.findChildViewUnder(e.getX(),e.getY());
+        if(child!=null && clicklistener!=null && gestureDetector.onTouchEvent(e)){
+            clicklistener.onClick(child,rv.getChildAdapterPosition(child));
+        }
     }
 
     @Override

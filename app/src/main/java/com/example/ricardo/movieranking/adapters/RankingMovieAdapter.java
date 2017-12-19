@@ -23,6 +23,10 @@ import java.util.List;
 
 /**
  * Created by Ricardo on 15/12/2017.
+ *
+ * Adapter para criar
+ * e vincular objetos
+ * à RecyclerView
  */
 
 public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapter.ViewHolder>{
@@ -39,18 +43,37 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
         listMovieRanking = new ArrayList<>();
     }
 
+    /*
+    Obtendo da Activity o objeto Configuration
+    que retorna a URL de busca de imagens
+     */
     public void setConfiguration(Configuration configuration){
         this.configuration = configuration;
     }
 
+    /*
+    Obtendo da Activity a lista de gêneros,
+    essa lista será utilizada para obter
+    o nome do gênero através do ID
+     */
     public void setGenreList(List<Genre> genres) {
         this.genresList = genres;
     }
 
+    /*
+    Retornando para a activity o id do filme
+    para ser utilizado na consulta de
+    detalhes do filme
+     */
     public int getMovieIdFromClicked(int position){
         return listMovieRanking.get(position).getId();
     }
 
+    /*
+    Escutando a RecyclerView para saber se chegou
+    ao fim da lista. Isso será necessário para
+    buscar mais itens.
+     */
     public void setOnBottomReachedListener(OnBottomReachedListener onBottomReachedListener){
         this.onBottomReachedListener = onBottomReachedListener;
     }
@@ -67,6 +90,11 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         MovieListResults movieListResults = listMovieRanking.get(position);
 
+        /*
+        Garantindo que o objeto configuration foi
+        populado para que com a URL nele possamos
+        buscar as imagens
+         */
         if(configuration != null) {
             String imageLoader = configuration.getImages().getBaseUrl()
                     + configuration.getImages().getPosterSizes().get(2)
@@ -85,6 +113,10 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
         holder.title.setText(movieListResults.getTitle());
         holder.score.setText("Nota: " + String.valueOf(movieListResults.getVoteAverage()));
 
+        /*
+        Comparando o ID do gênero com a lista de gêneros
+        para obter o nome do gênero
+         */
         if(genresList != null) {
             String genreText = "Gêneros: ";
             for (int i = 0; i < movieListResults.getGenreIds().size(); i++) {
@@ -102,17 +134,27 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
             holder.genre.setText(genreText);
         }
 
+        /*
+        Obtendo somente o ano da data
+        formato yyyy-mm-dd
+         */
         if( movieListResults.getReleaseDate() != null
                 &&  movieListResults.getReleaseDate().length() > 0){
             holder.releaseYear.setText("Ano de lançamento: " + movieListResults.getReleaseDate().substring(0,4));
         }
 
+        /*
+        Spannable dá a aparência de link
+        para o texto
+         */
         final CharSequence text = "Clique aqui para saber mais";
         final SpannableString spannableString = new SpannableString( text );
         spannableString.setSpan(new URLSpan(""), 0, spannableString.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         holder.moreInfo.setText(spannableString, TextView.BufferType.SPANNABLE);
 
-
+        /*
+        fim da Recycler View atingido
+         */
         if (position == listMovieRanking.size() - 1){
             onBottomReachedListener.onBottomReached(position);
         }
@@ -123,11 +165,17 @@ public class RankingMovieAdapter extends RecyclerView.Adapter<RankingMovieAdapte
         return listMovieRanking.size();
     }
 
+    /*
+    Adicionando elementos para a RecyclerView
+     */
     public void addData(MovieListResults response) {
         listMovieRanking.add(response);
         notifyDataSetChanged();
     }
 
+    /*
+    Resetando o conteúdo da RecyclerView
+     */
     public void clear() {
         listMovieRanking.clear();
         notifyDataSetChanged();

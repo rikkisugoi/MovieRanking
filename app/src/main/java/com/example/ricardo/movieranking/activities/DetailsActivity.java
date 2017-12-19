@@ -133,7 +133,10 @@ public class DetailsActivity extends AppCompatActivity{
         }
         detailsGenre.setText(genreText);
 
-        detailsRelease.setText("Ano de lançamento: " + response.getReleaseDate().substring(0,4));
+        if( response.getReleaseDate() != null
+                &&  response.getReleaseDate().length() > 0){
+            detailsRelease.setText("Ano de lançamento: " + response.getReleaseDate().substring(0,4));
+        }
 
         String studiosText = "Produzido por: ";
         for (int i = 0; i < response.getProductionCompanies().size(); i ++) {
